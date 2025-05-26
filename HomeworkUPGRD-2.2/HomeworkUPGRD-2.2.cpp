@@ -68,6 +68,14 @@ public:
         return arr[num];
     }
 
+    void set_num(smart_array smarr) {
+        int arrsize = sizeof(smarr) / sizeof(smarr.arr[0]);
+        for (int i = 0; i < arrsize; i++) {
+            arr[i] = smarr.get_element(i);
+        }
+
+    }
+
     ~smart_array() {
         delete[]arr;
         fclose(f);
