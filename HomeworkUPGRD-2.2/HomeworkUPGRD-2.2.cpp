@@ -1,32 +1,15 @@
 ﻿
-
-
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>;
 #include <cstdio>;
 using namespace std;
 
 class smart_array {
 private:
-    FILE* f;
-
-public:
-
     int actual_size;
     int logical_size = 0;
     int* arr;
 
-    smart_array(const string& filename) {
-        f = fopen(filename.c_str(), "r");
-        if (f == nullptr) {
-            throw runtime_error("file open failed");
-        }
-        actual_size = 0;
-    }
-
-    void write(const std::string& str) {
-        fprintf(f, str.c_str());
-    }
+public:
 
     smart_array(int num) {
         actual_size = num;
@@ -63,22 +46,31 @@ public:
 
     int get_element(int num) {
         if (num > actual_size || num < 0) {
-            throw exception("Данный номер отствутствует.");
+            throw exception("Данный номер отсутствует.");
         }
         return arr[num];
     }
 
     void set_num(smart_array smarr) {
-        int arrsize = sizeof(smarr) / sizeof(smarr.arr[0]);
-        for (int i = 0; i < arrsize; i++) {
-            arr[i] = smarr.get_element(i);
+        int arrsize = sizeof(smarr.arr) / sizeof(smarr.arr[0]);
+        if (arrsize > actual_size) {
+            for (int i = 0; i < logical_size; i++) {
+                arr[i] = smarr.get_element(i);
+            }
+            for (int i = logical_size; i < actual_size; i++) {
+                add_element(smarr.get_element(i));
+            }
         }
-
+        else {
+            for (int i = 0; i < arrsize; i++) {
+                arr[i] = smarr.get_element(i);
+            }
+        }
     }
 
     ~smart_array() {
         delete[]arr;
-        fclose(f);
+
     }
 };
 
@@ -94,7 +86,7 @@ int main()
         arr2.add_element(44);
         arr2.add_element(34);
 
-        arr = arr2;
+        arr.set_num(arr2);
     }
     catch (const exception& ex) {
         std::cout << ex.what() << std::endl;
