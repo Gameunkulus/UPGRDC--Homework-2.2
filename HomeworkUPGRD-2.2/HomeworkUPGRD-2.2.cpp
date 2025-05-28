@@ -1,4 +1,5 @@
 ﻿
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>;
 #include <cstdio>;
 using namespace std;
@@ -50,10 +51,14 @@ public:
         }
         return arr[num];
     }
+    int get_actsize() {
+        int actsize = actual_size;
+        return actsize;
+    }
 
     void set_num(smart_array smarr) {
-        int arrsize = sizeof(smarr.arr) / sizeof(smarr.arr[0]);
-        if (arrsize > actual_size) {
+        int arrsize = sizeof(smarr.get_actsize()) / sizeof(smarr.arr[0]);
+        if (arrsize > get_actsize()) {
             for (int i = 0; i < logical_size; i++) {
                 arr[i] = smarr.get_element(i);
             }
@@ -68,10 +73,7 @@ public:
         }
     }
 
-    ~smart_array() {
-        delete[]arr;
-
-    }
+    
 };
 
 int main()
