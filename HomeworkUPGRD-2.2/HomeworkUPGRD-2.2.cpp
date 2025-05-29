@@ -56,21 +56,22 @@ public:
         return actsize;
     }
 
-    void set_num(smart_array smarr) {
-        int arrsize = sizeof(smarr.get_actsize()) / sizeof(smarr.arr[0]);
+    smart_array& operator=(smart_array& other){
+        int arrsize = sizeof(other.get_actsize()) / sizeof(other.arr[0]);
         if (arrsize > get_actsize()) {
             for (int i = 0; i < logical_size; i++) {
-                arr[i] = smarr.get_element(i);
+                arr[i] = other.get_element(i);
             }
             for (int i = logical_size; i < actual_size; i++) {
-                add_element(smarr.get_element(i));
+                add_element(other.get_element(i));
             }
         }
         else {
             for (int i = 0; i < arrsize; i++) {
-                arr[i] = smarr.get_element(i);
+                arr[i] = other.get_element(i);
             }
         }
+        return *this;
     }
 
     
@@ -88,7 +89,8 @@ int main()
         arr2.add_element(44);
         arr2.add_element(34);
 
-        arr.set_num(arr2);
+        arr = arr2;
+        cout << arr.get_element(0);
     }
     catch (const exception& ex) {
         std::cout << ex.what() << std::endl;
