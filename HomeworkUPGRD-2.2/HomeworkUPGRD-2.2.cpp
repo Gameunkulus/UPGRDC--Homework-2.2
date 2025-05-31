@@ -21,9 +21,9 @@ public:
 
     void add_element(int num) {
 
-        if (logical_size >= actual_size) {
+        if (logical_size >= get_actsize()) {
             actual_size *= 2;
-            int* newArr = new int[actual_size];
+            int* newArr = new int[get_actsize()];
             for (int i = 0; i < logical_size; i++) {
                 newArr[i] = arr[i];
             }
@@ -40,25 +40,37 @@ public:
         for (int i = 0; i < logical_size; i++) {
             cout << arr[i] << " ";
         }
-        for (int i = logical_size; i < actual_size; i++) {
+        for (int i = logical_size; i < get_actsize(); i++) {
             cout << " _ ";
         }
     }
 
     int get_element(int num) {
-        if (num > actual_size || num < 0) {
+        if (num > get_actsize() || num < 0) {
             throw exception("Данный номер отсутствует.");
         }
         return arr[num];
     }
     int get_actsize() {
-        int actsize = actual_size;
+        int actsize = this->actual_size;
         return actsize;
+    }
+    int get_logsize() {
+        int logsize = this->logical_size;
+        return logsize;
+    }
+
+    int set_arr(int num) {
+        this->arr = new int[num];
+        return arr[0];
     }
 
     smart_array& operator=(smart_array& other){
-        int arrsize = sizeof(other.get_actsize()) / sizeof(other.arr[0]);
-        if (arrsize > get_actsize()) {
+        delete[]this->arr;
+        int actsize = other.get_actsize();
+        int logsize = other.get_logsize();
+        set_arr(actsize);
+        if (actsize > get_actsize()) {
             for (int i = 0; i < logical_size; i++) {
                 arr[i] = other.get_element(i);
             }
@@ -67,7 +79,7 @@ public:
             }
         }
         else {
-            for (int i = 0; i < arrsize; i++) {
+            for (int i = 0; i < actsize; i++) {
                 arr[i] = other.get_element(i);
             }
         }
@@ -90,7 +102,6 @@ int main()
         arr2.add_element(34);
 
         arr = arr2;
-        cout << arr.get_element(0);
     }
     catch (const exception& ex) {
         std::cout << ex.what() << std::endl;
